@@ -164,6 +164,13 @@ export interface QuotationListItem {
   quotationPdfUrl?: string | null;
   isVatIncluded?: boolean;
   vatStatusText?: string;
+  isAssemblyIncluded?: boolean;
+  assemblyStatusText?: string;
+  isDeliveryIncluded?: boolean;
+  deliveryStatusText?: string;
+  deliveryDays?: number | null;
+  expectedDeliveryDate?: string | null;
+  deliveryTimeText?: string | null;
   itemCount: number;
   createdAt: string;
 }
@@ -199,6 +206,7 @@ export interface QuotationDetail {
   customerName: string;
   customerPhone?: string | null;
   customerEmail?: string | null;
+  customer?: Customer | null;
   quotationDate: string;
   validUntil?: string | null;
   totalAmount: number;
@@ -207,6 +215,13 @@ export interface QuotationDetail {
   notes?: string | null;
   isVatIncluded?: boolean;
   vatStatusText?: string;
+  isAssemblyIncluded?: boolean;
+  assemblyStatusText?: string;
+  isDeliveryIncluded?: boolean;
+  deliveryStatusText?: string;
+  deliveryDays?: number | null;
+  expectedDeliveryDate?: string | null;
+  deliveryTimeText?: string | null;
   quotationPdfUrl?: string | null;
   isConvertedToOrder: boolean;
   createdAt: string;
@@ -227,6 +242,10 @@ export interface CreateQuotationInput {
   validUntil?: string | null;
   notes?: string | null;
   isVatIncluded?: boolean;
+  isAssemblyIncluded?: boolean;
+  isDeliveryIncluded?: boolean;
+  deliveryDays?: number | null;
+  expectedDeliveryDate?: string | null;
   items: CreateQuotationItemInput[];
 }
 
@@ -265,6 +284,11 @@ export interface OrderListItem {
   quotationId?: string | null;
   orderDate: string;
   expectedDeliveryDate?: string | null;
+  deliveryDays?: number | null;
+  isAssemblyIncluded?: boolean;
+  assemblyStatusText?: string;
+  isDeliveryIncluded?: boolean;
+  deliveryStatusText?: string;
   totalAmount: number;
   paidAmount: number;
   remainingAmount: number;
@@ -324,6 +348,11 @@ export interface OrderDetail {
   quotationId?: string | null;
   orderDate: string;
   expectedDeliveryDate?: string | null;
+  deliveryDays?: number | null;
+  isAssemblyIncluded?: boolean;
+  assemblyStatusText?: string;
+  isDeliveryIncluded?: boolean;
+  deliveryStatusText?: string;
   totalAmount: number;
   paidAmount: number;
   remainingAmount: number;

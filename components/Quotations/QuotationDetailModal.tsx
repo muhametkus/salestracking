@@ -32,6 +32,11 @@ import {
   AlertTriangle,
   FileCode,
   MessageCircle,
+  Clock,
+  MapPin,
+  Building,
+  Phone,
+  Mail,
 } from "lucide-react";
 
 interface QuotationDetailModalProps {
@@ -302,6 +307,95 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
                   })}{" "}
                   ₺
                 </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Customer Details & Quotation Conditions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Customer Information Card */}
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2 text-xs">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-blue-600" /> Müşteri Bilgileri
+              </div>
+              <div className="font-bold text-sm text-slate-900 dark:text-white">
+                {detail.customer?.companyName || detail.customerName}
+              </div>
+              {detail.customer?.companyName && (
+                <div className="text-slate-600 dark:text-slate-400">
+                  Yetkili: {detail.customer.firstName} {detail.customer.lastName}
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-slate-500">
+                {(detail.customer?.phone || detail.customerPhone) && (
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="w-3 h-3 text-slate-400" />
+                    <span>{detail.customer?.phone || detail.customerPhone}</span>
+                  </div>
+                )}
+                {(detail.customer?.email || detail.customerEmail) && (
+                  <div className="flex items-center gap-1.5 truncate">
+                    <Mail className="w-3 h-3 text-slate-400" />
+                    <span className="truncate">{detail.customer?.email || detail.customerEmail}</span>
+                  </div>
+                )}
+              </div>
+              {detail.customer?.address && (
+                <div className="flex items-start gap-1.5 text-slate-500 pt-1 text-[11px] leading-snug">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                  <span>{detail.customer.address}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Conditions & Delivery Timeframe Card */}
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3 text-xs">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Truck className="w-3.5 h-3.5 text-indigo-600" /> Teklif Koşulları & Teslimat
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className={`p-2.5 rounded-lg border ${
+                  detail.isAssemblyIncluded !== false
+                    ? "bg-purple-50/60 text-purple-900 dark:bg-purple-950/30 dark:text-purple-300 border-purple-200 dark:border-purple-900/60"
+                    : "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                }`}>
+                  <div className="flex items-center gap-1.5 font-bold text-[11px]">
+                    <Wrench className="w-3.5 h-3.5 text-purple-600" /> Montaj
+                  </div>
+                  <div className="font-semibold text-xs mt-1">
+                    {detail.assemblyStatusText || (detail.isAssemblyIncluded !== false ? "Montaj Dahildir" : "Montaj Hariçtir")}
+                  </div>
+                </div>
+
+                <div className={`p-2.5 rounded-lg border ${
+                  detail.isDeliveryIncluded !== false
+                    ? "bg-blue-50/60 text-blue-900 dark:bg-blue-950/30 dark:text-blue-300 border-blue-200 dark:border-blue-900/60"
+                    : "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                }`}>
+                  <div className="flex items-center gap-1.5 font-bold text-[11px]">
+                    <Truck className="w-3.5 h-3.5 text-blue-600" /> Teslimat
+                  </div>
+                  <div className="font-semibold text-xs mt-1">
+                    {detail.deliveryStatusText || (detail.isDeliveryIncluded !== false ? "Teslimat Dahildir" : "Teslimat Hariçtir")}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-lg border border-indigo-100 dark:border-indigo-950 bg-indigo-50/40 dark:bg-indigo-950/20 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-indigo-600" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
+                    Maksimum Teslim Tarihi:
+                  </span>
+                </div>
+                <div className="font-bold text-indigo-600 dark:text-indigo-400">
+                  {detail.expectedDeliveryDate
+                    ? new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")
+                    : detail.deliveryDays
+                    ? `${detail.deliveryDays} Gün`
+                    : "Belirtilmedi"}
+                </div>
               </div>
             </div>
           </div>

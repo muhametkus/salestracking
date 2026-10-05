@@ -26,6 +26,8 @@ import {
   Truck,
   Wrench,
   AlertTriangle,
+  Calendar,
+  Clock,
 } from "lucide-react";
 
 interface CreateQuotationModalProps {
@@ -64,6 +66,37 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
   const [validUntil, setValidUntil] = useState("");
   const [notes, setNotes] = useState("");
   const [isVatIncluded, setIsVatIncluded] = useState(true);
+  const [isAssemblyIncluded, setIsAssemblyIncluded] = useState(true);
+  const [isDeliveryIncluded, setIsDeliveryIncluded] = useState(true);
+  const [deliveryDays, setDeliveryDays] = useState<number | "">("");
+  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState<string>("");
+
+  const handleDeliveryDaysChange = (daysVal: number | "") => {
+    setDeliveryDays(daysVal);
+    if (typeof daysVal === "number" && daysVal > 0) {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + daysVal);
+      setExpectedDeliveryDate(targetDate.toISOString().split("T")[0]);
+    } else {
+      setExpectedDeliveryDate("");
+    }
+  };
+
+  const handleExpectedDeliveryDateChange = (dateStr: string) => {
+    setExpectedDeliveryDate(dateStr);
+    if (dateStr) {
+      const selected = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      selected.setHours(0, 0, 0, 0);
+      const diffTime = selected.getTime() - today.getTime();
+      const diffDays = Math.max(1, Math.round(diffTime / (1000 * 60 * 60 * 24)));
+      setDeliveryDays(diffDays);
+    } else {
+      setDeliveryDays("");
+    }
+  };
+
   const [items, setItems] = useState<ItemRow[]>([
     {
       productId: "",
@@ -334,6 +367,10 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
         validUntil: validUntil ? new Date(validUntil).toISOString() : null,
         notes: notes.trim() || null,
         isVatIncluded,
+        isAssemblyIncluded,
+        isDeliveryIncluded,
+        deliveryDays: deliveryDays ? Number(deliveryDays) : null,
+        expectedDeliveryDate: expectedDeliveryDate ? new Date(expectedDeliveryDate).toISOString() : null,
         items: finalItems,
       });
 
@@ -345,6 +382,10 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
       setNotes("");
       setValidUntil("");
       setIsVatIncluded(true);
+      setIsAssemblyIncluded(true);
+      setIsDeliveryIncluded(true);
+      setDeliveryDays("");
+      setExpectedDeliveryDate("");
       setItems([
         {
           productId: "",
@@ -560,6 +601,140 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                 placeholder="Ödeme şartı, teslimat detayları vb."
                 className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-500 outline-none"
               />
+            </div>
+          </div>
+
+          {/* Teklif Koşulları & Maksimum Teslimat Süresi */}
+          <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 space-y-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+              <Truck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span>Teklif Koşulları & Teslimat Taahhüdü</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Montaj Koşulu */}
+              <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/60">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <Wrench className="w-3.5 h-3.5 text-purple-600" /> Montaj Koşulu
+                  </span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    isAssemblyIncluded
+                      ? "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                      : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                  }`}>
+                    {isAssemblyIncluded ? "Montaj Dahil" : "Montaj Hariç"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="assemblyIncludedRadio"
+                      checked={isAssemblyIncluded === true}
+                      onChange={() => setIsAssemblyIncluded(true)}
+                      className="w-3.5 h-3.5 text-purple-600"
+                    />
+                    <span className="font-medium text-slate-700 dark:text-slate-300">Montaj Dahildir</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="assemblyIncludedRadio"
+                      checked={isAssemblyIncluded === false}
+                      onChange={() => setIsAssemblyIncluded(false)}
+                      className="w-3.5 h-3.5 text-slate-500"
+                    />
+                    <span className="text-slate-500">Montaj Hariçtir</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Teslimat Koşulu */}
+              <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/60">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <Truck className="w-3.5 h-3.5 text-blue-600" /> Teslimat Koşulu
+                  </span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    isDeliveryIncluded
+                      ? "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                      : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                  }`}>
+                    {isDeliveryIncluded ? "Teslimat Dahil" : "Teslimat Hariç"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="deliveryIncludedRadio"
+                      checked={isDeliveryIncluded === true}
+                      onChange={() => setIsDeliveryIncluded(true)}
+                      className="w-3.5 h-3.5 text-blue-600"
+                    />
+                    <span className="font-medium text-slate-700 dark:text-slate-300">Teslimat Dahildir</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="deliveryIncludedRadio"
+                      checked={isDeliveryIncluded === false}
+                      onChange={() => setIsDeliveryIncluded(false)}
+                      className="w-3.5 h-3.5 text-slate-500"
+                    />
+                    <span className="text-slate-500">Teslimat Hariçtir</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Maksimum Teslimat Süresi (Gün & Tarih Seçici Çift Yönlü) */}
+            <div className="p-3.5 rounded-lg border border-blue-100 dark:border-blue-950 bg-blue-50/40 dark:bg-blue-950/20 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-blue-950 dark:text-blue-200 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-blue-600" /> Maksimum Teslimat Süresi & Tarihi
+                </span>
+                <span className="text-[11px] text-blue-700 dark:text-blue-300 font-medium">
+                  {deliveryDays ? `${deliveryDays} gün sonra (${expectedDeliveryDate ? new Date(expectedDeliveryDate).toLocaleDateString("tr-TR") : ""})` : "Belirtilmedi"}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Teslimat Süresi (Gün Olarak)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="Örn: 15"
+                      value={deliveryDays}
+                      onChange={(e) => handleDeliveryDaysChange(e.target.value ? parseInt(e.target.value) : "")}
+                      className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-1 focus:ring-blue-500 outline-none pr-14"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-400">
+                      İş Günü
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Veya Tam Teslim Tarihi Seçin (Takvim)
+                  </label>
+                  <input
+                    type="date"
+                    value={expectedDeliveryDate}
+                    onChange={(e) => handleExpectedDeliveryDateChange(e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-1 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+              </div>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 italic">
+                * Gün girdiğinizde teslim tarihi otomatik hesaplanır veya takvimden tarih seçtiğinizde gün süresi güncellenir. Onaylanan siparişe de bu teslim tarihi aktarılır.
+              </p>
             </div>
           </div>
 

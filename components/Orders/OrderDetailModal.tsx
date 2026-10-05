@@ -36,6 +36,9 @@ import {
   ArrowRight,
   AlertCircle,
   Copy,
+  User,
+  MapPin,
+  Phone,
 } from "lucide-react";
 
 interface OrderDetailModalProps {
@@ -411,6 +414,78 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                 ))}
               </select>
               {statusUpdating && <Loader2 className="w-4 h-4 animate-spin text-blue-600" />}
+            </div>
+          </div>
+
+          {/* Customer & Delivery Commitments Info Card */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1.5">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-blue-600" /> Müşteri & İletişim
+              </div>
+              <div className="font-bold text-sm text-slate-900 dark:text-white">
+                {detail.customerName}
+              </div>
+              <div className="flex items-center gap-3 text-slate-500">
+                {detail.customerPhone && (
+                  <span className="flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-slate-400" /> {detail.customerPhone}
+                  </span>
+                )}
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3 text-slate-400" /> Sipariş: {new Date(detail.orderDate).toLocaleDateString("tr-TR")}
+                </span>
+              </div>
+              {detail.customerAddress && (
+                <div className="flex items-start gap-1 text-slate-500 text-[11px] leading-snug pt-0.5">
+                  <MapPin className="w-3 h-3 text-slate-400 shrink-0 mt-0.5" />
+                  <span>{detail.customerAddress}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Truck className="w-3.5 h-3.5 text-indigo-600" /> Taahhüt Edilen Koşullar & Teslimat
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className={`p-2 rounded-lg border text-center ${
+                  detail.isAssemblyIncluded !== false
+                    ? "bg-purple-50/60 text-purple-900 dark:bg-purple-950/30 dark:text-purple-300 border-purple-200 dark:border-purple-900/60"
+                    : "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                }`}>
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Montaj</div>
+                  <div className="font-bold text-xs mt-0.5">
+                    {detail.assemblyStatusText || (detail.isAssemblyIncluded !== false ? "Montaj Dahil" : "Montaj Hariç")}
+                  </div>
+                </div>
+
+                <div className={`p-2 rounded-lg border text-center ${
+                  detail.isDeliveryIncluded !== false
+                    ? "bg-blue-50/60 text-blue-900 dark:bg-blue-950/30 dark:text-blue-300 border-blue-200 dark:border-blue-900/60"
+                    : "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                }`}>
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase">Teslimat</div>
+                  <div className="font-bold text-xs mt-0.5">
+                    {detail.deliveryStatusText || (detail.isDeliveryIncluded !== false ? "Teslimat Dahil" : "Teslimat Hariç")}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-2 rounded-lg border border-indigo-100 dark:border-indigo-950 bg-indigo-50/40 dark:bg-indigo-950/20 flex items-center justify-between">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-indigo-600" />
+                  Maksimum Teslim Tarihi:
+                </span>
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                  {detail.expectedDeliveryDate
+                    ? new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")
+                    : detail.deliveryDays
+                    ? `${detail.deliveryDays} Gün`
+                    : "Belirtilmedi"}
+                </span>
+              </div>
             </div>
           </div>
 
