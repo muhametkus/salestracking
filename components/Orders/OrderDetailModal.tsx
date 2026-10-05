@@ -363,7 +363,7 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                   ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                   : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800"
               }`}>
-                {detail.vatStatusText || (detail.isVatIncluded !== false ? "✓ Fiyata KDV dahildir" : "⚠️ KDV Hariç (+%20 KDV)")}
+                {detail.vatStatusText || (detail.isVatIncluded !== false ? "✓ Fiyata KDV dahildir" : "⚠️ KDV Hariç")}
               </span>
 
               {(detail.quotationInfo || detail.quotationId) && (

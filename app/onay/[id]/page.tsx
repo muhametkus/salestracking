@@ -193,7 +193,7 @@ export default function CustomerApprovalPage() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[11px] font-bold uppercase tracking-wider mb-2">
                 <FileCheck className="w-3.5 h-3.5" />
-                <span>Proforma Satış Teklifi</span>
+                <span>Satış Teklifi</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {detail.quotationNumber}
@@ -258,83 +258,92 @@ export default function CustomerApprovalPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-              {/* 1. Montaj Koşulu */}
-              <div className={`p-4 rounded-2xl border transition-all ${
-                isAssembly
-                  ? "bg-purple-50/50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-900/60"
-                  : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
-              }`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                    isAssembly
-                      ? "bg-purple-600 text-white shadow-sm"
-                      : "bg-slate-200 dark:bg-slate-800 text-slate-500"
-                  }`}>
-                    <Wrench className="w-4 h-4" />
+            <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAssembly ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-3.5`}>
+              {/* 1. Montaj (ve Teslimat) Koşulu */}
+              {isAssembly ? (
+                /* Montaj Dahil Durumunda: Montaj ve Teslimat tek kart olarak belirtilir */
+                <div className="p-4 rounded-2xl border transition-all bg-purple-50/50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-900/60">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-purple-600 text-white shadow-sm">
+                      <Wrench className="w-4 h-4" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-300">
+                      Dahil
+                    </span>
                   </div>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    isAssembly
-                      ? "bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-300"
-                      : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
-                  }`}>
-                    {isAssembly ? "Dahil" : "Hariç"}
-                  </span>
-                </div>
-                <div className="font-bold text-xs text-slate-900 dark:text-white">
-                  {detail.assemblyStatusText || (isAssembly ? "Montaj Dahildir" : "Montaj Hariçtir")}
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                  {isAssembly
-                    ? "Uzman teknik ekibimiz tarafından sahada montaj ve kurulum fiyata dahildir."
-                    : "Montaj ve kurulum hizmeti fiyata dahil değildir; sadece teslimat sağlanır."}
-                </p>
-              </div>
-
-              {/* 2. Teslimat Koşulu */}
-              <div className={`p-4 rounded-2xl border transition-all ${
-                isDelivery
-                  ? "bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/60"
-                  : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
-              }`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                    isDelivery
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "bg-slate-200 dark:bg-slate-800 text-slate-500"
-                  }`}>
-                    <Truck className="w-4 h-4" />
+                  <div className="font-bold text-xs text-slate-900 dark:text-white">
+                    Montaj ve Teslimat Dahildir
                   </div>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    isDelivery
-                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300"
-                      : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
-                  }`}>
-                    {isDelivery ? "Dahil" : "Hariç"}
-                  </span>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    Uzman teknik ekibimiz tarafından sahada montaj, kurulum ve adrese teslimat fiyata dahildir.
+                  </p>
                 </div>
-                <div className="font-bold text-xs text-slate-900 dark:text-white">
-                  {detail.deliveryStatusText || (isDelivery ? "Teslimat Dahildir" : "Teslimat Hariçtir")}
+              ) : (
+                /* Montaj Hariç Durumunda */
+                <div className="p-4 rounded-2xl border transition-all bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-200 dark:bg-slate-800 text-slate-500">
+                      <Wrench className="w-4 h-4" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400">
+                      Hariç
+                    </span>
+                  </div>
+                  <div className="font-bold text-xs text-slate-900 dark:text-white">
+                    Montaj Hariçtir
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    Montaj hizmeti tercih edilmediği takdirde, ürünün teslimatı kurulmadan demonte olarak gerçekleştirilecektir.
+                  </p>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                  {isDelivery
-                    ? "Belirtilen teslim adresine nakliye ve lojistik masrafları tarafımıza aittir."
-                    : "Lojistik ve nakliye alıcı firma/müşteri tarafından karşılanacaktır."}
-                </p>
-              </div>
+              )}
 
-              {/* 3. Maksimum Teslimat Süresi / Tarihi */}
+              {/* 2. Teslimat Koşulu - Sadece Montaj hariç ise ayrı kart olarak gösterilir */}
+              {!isAssembly && (
+                <div className={`p-4 rounded-2xl border transition-all ${
+                  isDelivery
+                    ? "bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/60"
+                    : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
+                }`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                      isDelivery
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                    }`}>
+                      <Truck className="w-4 h-4" />
+                    </div>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                      isDelivery
+                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300"
+                        : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
+                    }`}>
+                      {isDelivery ? "Dahil" : "Hariç"}
+                    </span>
+                  </div>
+                  <div className="font-bold text-xs text-slate-900 dark:text-white">
+                    {detail.deliveryStatusText || (isDelivery ? "Teslimat Dahildir" : "Teslimat Hariçtir")}
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    {isDelivery
+                      ? "Belirtilen teslim adresine nakliye ve lojistik masrafları tarafımıza aittir."
+                      : "Lojistik ve nakliye alıcı firma/müşteri tarafından karşılanacaktır."}
+                  </p>
+                </div>
+              )}
+
+              {/* 3. Teslim Tarihi */}
               <div className="p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/50 dark:bg-indigo-950/20">
                 <div className="flex items-center justify-between mb-2">
                   <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-sm">
                     <Clock className="w-4 h-4" />
                   </div>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300">
-                    Taahhüt
+                    Teslim Tarihi
                   </span>
                 </div>
                 <div className="font-bold text-xs text-indigo-950 dark:text-indigo-200">
-                  Maksimum Teslim Tarihi
+                  Teslim Tarihi
                 </div>
                 <div className="text-sm font-extrabold text-indigo-600 dark:text-indigo-400 mt-0.5">
                   {detail.expectedDeliveryDate
@@ -345,12 +354,12 @@ export default function CustomerApprovalPage() {
                 </div>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">
                   {detail.deliveryDays
-                    ? `Onay tarihinden itibaren en geç ${detail.deliveryDays} gün içinde teslim edilir.`
+                    ? `Onay tarihinden itibaren en geç ${detail.deliveryDays} gün içinde teslim edilir. Mücbir sebepler ve operasyonel aksaklıklar sebebiyle doğabilecek istisnai gecikmeler saklıdır.`
                     : "Ürün ve tedarik durumuna göre en hızlı sürede teslimat yapılır."}
                 </p>
               </div>
 
-              {/* 4. KDV Durumu */}
+              {/* 4. KDV Uygulaması */}
               <div className={`p-4 rounded-2xl border ${
                 detail.isVatIncluded !== false
                   ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/60"
@@ -369,22 +378,32 @@ export default function CustomerApprovalPage() {
                       ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300"
                       : "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300"
                   }`}>
-                    {detail.isVatIncluded !== false ? "KDV Dahil" : "+%20 KDV"}
+                    {detail.isVatIncluded !== false ? "KDV Dahil" : "KDV Hariç"}
                   </span>
                 </div>
                 <div className="font-bold text-xs text-slate-900 dark:text-white">
                   KDV Uygulaması
                 </div>
                 <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-0.5">
-                  {detail.vatStatusText || (detail.isVatIncluded !== false ? "Fiyatlara KDV Dahildir" : "KDV Dahil Değildir")}
+                  {detail.isVatIncluded !== false ? (detail.vatStatusText || "Fiyatlara KDV Dahildir") : "KDV Hariçtir."}
                 </div>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">
                   {detail.isVatIncluded !== false
-                    ? "Tüm kalemlerde geçerli KDV toplam fiyata dahildir."
-                    : "Fatura kesiminde kanuni %20 KDV tutarı eklenecektir."}
+                    ? "KDV toplam fiyata dahildir."
+                    : "Anlaşılan Tutara KDV dahil değildir."}
                 </p>
               </div>
             </div>
+
+            {/* Montaj Hariç Durumu Bilgilendirme Kutusu */}
+            {!isAssembly && (
+              <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/50 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
+                <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <span className="leading-relaxed">
+                  Montaj hizmeti tercih edilmediği takdirde, ürünün teslimatı kurulmadan demonte olarak gerçekleştirilecektir.
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Notes if present */}
@@ -462,11 +481,11 @@ export default function CustomerApprovalPage() {
                   ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                   : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800"
               }`}>
-                {detail.vatStatusText || (detail.isVatIncluded !== false ? "✓ Fiyatlara KDV Dahildir" : "⚠️ KDV Hariç (+%20 KDV)")}
+                {detail.isVatIncluded !== false ? (detail.vatStatusText || "✓ Fiyatlara KDV Dahildir") : "⚠️ KDV Hariçtir."}
               </span>
               {detail.expectedDeliveryDate && (
                 <span className="text-[11px] text-indigo-700 dark:text-indigo-300 font-medium hidden sm:inline-block">
-                  Teslimat: {new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")}
+                  Teslim Tarihi: {new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")}
                 </span>
               )}
             </div>

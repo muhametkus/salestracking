@@ -61,15 +61,27 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const getDefaultValidUntil = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 5);
+    return d.toISOString().split("T")[0];
+  };
+
+  const getDefaultDeliveryDate = (days: number = 15) => {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    return d.toISOString().split("T")[0];
+  };
+
   // Form State
   const [customerId, setCustomerId] = useState("");
-  const [validUntil, setValidUntil] = useState("");
+  const [validUntil, setValidUntil] = useState<string>(getDefaultValidUntil());
   const [notes, setNotes] = useState("");
-  const [isVatIncluded, setIsVatIncluded] = useState(true);
-  const [isAssemblyIncluded, setIsAssemblyIncluded] = useState(true);
-  const [isDeliveryIncluded, setIsDeliveryIncluded] = useState(true);
-  const [deliveryDays, setDeliveryDays] = useState<number | "">("");
-  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState<string>("");
+  const [isVatIncluded, setIsVatIncluded] = useState(false);
+  const [isAssemblyIncluded, setIsAssemblyIncluded] = useState(false);
+  const [isDeliveryIncluded, setIsDeliveryIncluded] = useState(false);
+  const [deliveryDays, setDeliveryDays] = useState<number | "">(15);
+  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState<string>(getDefaultDeliveryDate(15));
 
   const handleDeliveryDaysChange = (daysVal: number | "") => {
     setDeliveryDays(daysVal);
@@ -105,7 +117,7 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
       quantity: 1,
       unitPrice: 0,
       description: "",
-      isVatIncluded: true,
+      isVatIncluded: false,
       requiresProduction: false,
       requiresDelivery: false,
       requiresInstallation: false,
@@ -212,7 +224,7 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
       copy[index].requiresProduction = selectedProd.requiresProduction;
       copy[index].requiresDelivery = selectedProd.requiresDelivery;
       copy[index].requiresInstallation = selectedProd.requiresInstallation;
-      copy[index].isVatIncluded = selectedProd.isVatIncluded !== undefined ? selectedProd.isVatIncluded : isVatIncluded;
+      copy[index].isVatIncluded = isVatIncluded;
       return copy;
     });
   };
@@ -362,15 +374,22 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
         return;
       }
 
+      let calculatedValidUntil = validUntil;
+      if (!calculatedValidUntil) {
+        calculatedValidUntil = getDefaultValidUntil();
+      }
+
       await quotationService.create({
         customerId,
-        validUntil: validUntil ? new Date(validUntil).toISOString() : null,
+        validUntil: calculatedValidUntil ? new Date(calculatedValidUntil).toISOString() : null,
         notes: notes.trim() || null,
         isVatIncluded,
         isAssemblyIncluded,
         isDeliveryIncluded,
-        deliveryDays: deliveryDays ? Number(deliveryDays) : null,
-        expectedDeliveryDate: expectedDeliveryDate ? new Date(expectedDeliveryDate).toISOString() : null,
+        deliveryDays: deliveryDays ? Number(deliveryDays) : 15,
+        expectedDeliveryDate: expectedDeliveryDate
+          ? new Date(expectedDeliveryDate).toISOString()
+          : new Date(getDefaultDeliveryDate(15)).toISOString(),
         items: finalItems,
       });
 
@@ -380,12 +399,12 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
 
       // Reset form
       setNotes("");
-      setValidUntil("");
-      setIsVatIncluded(true);
-      setIsAssemblyIncluded(true);
-      setIsDeliveryIncluded(true);
-      setDeliveryDays("");
-      setExpectedDeliveryDate("");
+      setValidUntil(getDefaultValidUntil());
+      setIsVatIncluded(false);
+      setIsAssemblyIncluded(false);
+      setIsDeliveryIncluded(false);
+      setDeliveryDays(15);
+      setExpectedDeliveryDate(getDefaultDeliveryDate(15));
       setItems([
         {
           productId: "",
@@ -394,7 +413,7 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
           quantity: 1,
           unitPrice: 0,
           description: "",
-          isVatIncluded: true,
+          isVatIncluded: false,
           requiresProduction: false,
           requiresDelivery: false,
           requiresInstallation: false,
@@ -648,6 +667,9 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                     <span className="text-slate-500">Montaj Hariçtir</span>
                   </label>
                 </div>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2 italic">
+                  * Montaj hizmeti tercih edilmediği takdirde, ürünün teslimatı kurulmadan demonte olarak gerçekleştirilecektir.
+                </p>
               </div>
 
               {/* Teslimat Koşulu */}
@@ -689,11 +711,11 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
               </div>
             </div>
 
-            {/* Maksimum Teslimat Süresi (Gün & Tarih Seçici Çift Yönlü) */}
+            {/* Teslim Tarihi (Gün & Tarih Seçici Çift Yönlü) */}
             <div className="p-3.5 rounded-lg border border-blue-100 dark:border-blue-950 bg-blue-50/40 dark:bg-blue-950/20 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-blue-950 dark:text-blue-200 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-blue-600" /> Maksimum Teslimat Süresi & Tarihi
+                  <Clock className="w-3.5 h-3.5 text-blue-600" /> Teslim Tarihi
                 </span>
                 <span className="text-[11px] text-blue-700 dark:text-blue-300 font-medium">
                   {deliveryDays ? `${deliveryDays} gün sonra (${expectedDeliveryDate ? new Date(expectedDeliveryDate).toLocaleDateString("tr-TR") : ""})` : "Belirtilmedi"}
@@ -754,6 +776,21 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                   <input
                     type="radio"
                     name="isVatIncludedQuotation"
+                    checked={isVatIncluded === false}
+                    onChange={() => {
+                      setIsVatIncluded(false);
+                      setItems((prev) => prev.map((item) => ({ ...item, isVatIncluded: false })));
+                    }}
+                    className="w-4 h-4 text-amber-600 focus:ring-amber-500"
+                  />
+                  <span className="font-semibold text-amber-600 dark:text-amber-400">
+                    KDV Hariç
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
+                  <input
+                    type="radio"
+                    name="isVatIncludedQuotation"
                     checked={isVatIncluded === true}
                     onChange={() => {
                       setIsVatIncluded(true);
@@ -763,21 +800,6 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                   />
                   <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                     Fiyata KDV Dahildir
-                  </span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
-                  <input
-                    type="radio"
-                    name="isVatIncludedQuotation"
-                    checked={isVatIncluded === false}
-                    onChange={() => {
-                      setIsVatIncluded(false);
-                      setItems((prev) => prev.map((item) => ({ ...item, isVatIncluded: false })));
-                    }}
-                    className="w-4 h-4 text-amber-600 focus:ring-amber-500"
-                  />
-                  <span className="font-medium text-amber-600 dark:text-amber-400">
-                    KDV Hariç (+%20 KDV)
                   </span>
                 </label>
               </div>
@@ -805,12 +827,10 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                   <thead className="bg-slate-100/70 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
                     <tr>
                       <th className="p-3">Ürün (Katalog veya Serbest Metin)</th>
-                      <th className="p-3 w-20">Adet</th>
-                      <th className="p-3 w-28">Birim Fiyat</th>
-                      <th className="p-3 w-24">KDV</th>
-                      <th className="p-3 w-28">Toplam</th>
-                      <th className="p-3">Operasyonel Rozetler</th>
-                      <th className="p-3 w-10 text-center">Sil</th>
+                      <th className="p-3 w-28">Adet</th>
+                      <th className="p-3 w-36">Birim Fiyat</th>
+                      <th className="p-3 w-36">Toplam</th>
+                      <th className="p-3 w-12 text-center">Sil</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -881,59 +901,8 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                               className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-1 focus:ring-blue-500 outline-none"
                             />
                           </td>
-                          <td className="p-2.5">
-                            <select
-                              value={row.isVatIncluded ? "true" : "false"}
-                              onChange={(e) =>
-                                handleItemFieldChange(idx, "isVatIncluded", e.target.value === "true")
-                              }
-                              className="px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-[11px] font-medium outline-none"
-                            >
-                              <option value="true">KDV Dahil</option>
-                              <option value="false">KDV Hariç</option>
-                            </select>
-                          </td>
                           <td className="p-2.5 font-bold text-slate-800 dark:text-slate-200">
                             {rowTotal.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
-                          </td>
-                          <td className="p-2.5">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <label className="flex items-center gap-1 text-[11px] cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={row.requiresProduction}
-                                  onChange={(e) =>
-                                    handleItemFieldChange(idx, "requiresProduction", e.target.checked)
-                                  }
-                                  className="w-3.5 h-3.5 rounded text-blue-600"
-                                />
-                                <span>Üretim Gerektirir</span>
-                              </label>
-
-                              <label className="flex items-center gap-1 text-[11px] cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={row.requiresDelivery}
-                                  onChange={(e) =>
-                                    handleItemFieldChange(idx, "requiresDelivery", e.target.checked)
-                                  }
-                                  className="w-3.5 h-3.5 rounded text-blue-600"
-                                />
-                                <span>Teslimat Dahil</span>
-                              </label>
-
-                              <label className="flex items-center gap-1 text-[11px] cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={row.requiresInstallation}
-                                  onChange={(e) =>
-                                    handleItemFieldChange(idx, "requiresInstallation", e.target.checked)
-                                  }
-                                  className="w-3.5 h-3.5 rounded text-blue-600"
-                                />
-                                <span>Montaj Dahil</span>
-                              </label>
-                            </div>
                           </td>
                           <td className="p-2.5 text-center">
                             <button
@@ -961,7 +930,7 @@ export const CreateQuotationModal: React.FC<CreateQuotationModalProps> = ({
                     ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"
                     : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300 dark:border-amber-800"
                 }`}>
-                  {isVatIncluded ? "✓ Fiyata KDV dahildir" : "⚠️ Fiyatlara KDV dahil değildir (+%20 KDV)"}
+                  {isVatIncluded ? "✓ Fiyata KDV dahildir" : "⚠️ KDV Hariç"}
                 </span>
               </div>
               <div className="flex items-center gap-3">

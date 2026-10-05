@@ -253,7 +253,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
               />
               <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                Fiyata KDV Dahil (Fiyata KDV dahildir)
+                Fiyata KDV Dahil
               </span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
@@ -265,7 +265,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 className="w-4 h-4 text-amber-600 focus:ring-amber-500"
               />
               <span className="font-medium text-amber-600 dark:text-amber-400">
-                KDV Hariç (+%20 KDV)
+                KDV Hariç
               </span>
             </label>
           </div>

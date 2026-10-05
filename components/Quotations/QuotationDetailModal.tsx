@@ -274,7 +274,7 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
                   ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                   : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800"
               }`}>
-                {detail.vatStatusText || (detail.isVatIncluded !== false ? "✓ Fiyata KDV dahildir" : "⚠️ KDV Hariç (+%20 KDV)")}
+                {detail.vatStatusText || (detail.isVatIncluded !== false ? "✓ Fiyata KDV dahildir" : "⚠️ KDV Hariç")}
               </span>
               {detail.isConvertedToOrder && (
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
@@ -386,7 +386,7 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
                 <div className="flex items-center gap-2">
                   <Clock className="w-3.5 h-3.5 text-indigo-600" />
                   <span className="font-semibold text-slate-700 dark:text-slate-300">
-                    Maksimum Teslim Tarihi:
+                    Teslim Tarihi:
                   </span>
                 </div>
                 <div className="font-bold text-indigo-600 dark:text-indigo-400">
@@ -397,6 +397,12 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
                     : "Belirtilmedi"}
                 </div>
               </div>
+
+              {detail.isAssemblyIncluded === false && (
+                <p className="text-[10px] text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 p-2 rounded-lg border border-amber-200 dark:border-amber-900/40 leading-relaxed">
+                  * Montaj hizmeti tercih edilmediği takdirde, ürünün teslimatı kurulmadan demonte olarak gerçekleştirilecektir.
+                </p>
+              )}
             </div>
           </div>
 
