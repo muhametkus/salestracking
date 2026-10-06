@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/UI/Modal";
-import { customerService, orderService, quotationService } from "@/lib/api";
+import { API_BASE_URL, customerService, orderService, quotationService } from "@/lib/api";
 import { OrderDetail, OrderStatus, OrderPayment } from "@/types";
 import { StatusBadge, getOrderStatusTitle } from "@/components/UI/StatusBadge";
 import { useNotification } from "@/components/UI/NotificationContext";
@@ -134,10 +134,10 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
       let generatedUrl: string | null = null;
 
       if (targetQuotationId) {
-        // 1. İlgili teklif bilgilerini API'den getir: GET http://localhost:5010/api/Quotations/{id}
+        // 1. İlgili teklif bilgilerini API'den getir.
         const quotationDetail = await quotationService.getById(targetQuotationId);
 
-        // 2. Doğrudan bu teklif verisini PDF servisine (http://localhost:3000/api/documents) gönder
+        // 2. Teklif verisini PDF servisine sunucu üzerinden gönder.
         const res = await fetch("/api/pdf/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -147,9 +147,7 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
         if (!res.ok || !json.success) {
           throw new Error(json.message || "PDF oluşturulamadı.");
         }
-        generatedUrl =
-          json.pdfUrl ||
-          (quotationDetail.id ? `http://localhost:3000/uploads/${quotationDetail.id}.pdf` : null);
+        generatedUrl = json.pdfUrl || null;
       } else {
         generatedUrl = await orderService.generatePdf(detail);
       }
@@ -369,7 +367,7 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
               {(detail.quotationInfo || detail.quotationId) && (
                 <div className="flex items-center gap-1.5">
                   <a
-                    href={`http://localhost:5010/api/Quotations/${detail.quotationInfo?.quotationId || detail.quotationInfo?.id || detail.quotationId}`}
+                    href={`${API_BASE_URL}/api/Quotations/${detail.quotationInfo?.quotationId || detail.quotationInfo?.id || detail.quotationId}`}
                     target="_blank"
                     rel="noreferrer"
                     className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition-colors flex items-center gap-1.5 shadow-sm"

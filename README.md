@@ -2,6 +2,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Production service URLs are configured in `.env.production`:
+
+```dotenv
+NEXT_PUBLIC_API_URL=https://apisatistakip.hebilogluahsap.com
+API_URL=https://apisatistakip.hebilogluahsap.com
+PDF_SERVICE_URL=https://teklifpdfgenerator.hebilogluahsap.com/api/documents
+```
+
+The API base URL excludes `/swagger`. The PDF URL includes the document generation endpoint.
+Deployment environment variables and `.env.local` override `.env.production`.
+Rebuild after changing `NEXT_PUBLIC_API_URL`, since Next.js embeds it in the browser bundle.
+Keep secrets out of the tracked `.env.production` file.
+
 First, run the development server:
 
 ```bash

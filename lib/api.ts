@@ -30,7 +30,7 @@ const getBaseUrl = (): string => {
     return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5010";
   }
   // Server-side
-  return process.env.API_URL || "http://localhost:5010";
+  return process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5010";
 };
 
 export const API_BASE_URL = getBaseUrl();

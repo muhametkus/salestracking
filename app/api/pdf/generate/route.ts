@@ -63,7 +63,11 @@ export async function POST(req: NextRequest) {
       (typeof data === "string" && data.startsWith("http") ? data : null);
 
     if (!pdfUrl && targetId) {
-      pdfUrl = `http://localhost:3000/uploads/${targetId}.pdf`;
+      pdfUrl = new URL(`/uploads/${encodeURIComponent(targetId)}.pdf`, pdfServiceUrl).href;
+    }
+
+    if (pdfUrl) {
+      pdfUrl = new URL(pdfUrl, new URL("/", pdfServiceUrl)).href;
     }
 
     return NextResponse.json({
