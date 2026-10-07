@@ -12,21 +12,7 @@ import {
   openWhatsApp,
   formatCurrency,
 } from "@/lib/whatsapp";
-import {
-  CheckSquare,
-  Search,
-  RefreshCw,
-  FileText,
-  Calendar,
-  Layers,
-  DollarSign,
-  MessageCircle,
-  ExternalLink,
-  ChevronRight,
-  TrendingUp,
-  AlertCircle,
-  CheckCircle2,
-} from "lucide-react";
+import { Search, RefreshCw, MessageCircle } from "lucide-react";
 
 export default function OrdersPage() {
   const { error, info } = useNotification();
@@ -75,7 +61,7 @@ export default function OrdersPage() {
     });
   }, [orders, searchQuery, statusFilter]);
 
-  // Overall financial calculations
+  // Financial calculations
   const totalRevenue = useMemo(
     () => orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0),
     [orders]
@@ -85,7 +71,15 @@ export default function OrdersPage() {
     [orders]
   );
   const totalRemaining = useMemo(
-    () => orders.reduce((sum, o) => sum + (o.remainingAmount !== undefined ? o.remainingAmount : (o.totalAmount - (o.paidAmount || 0))), 0),
+    () =>
+      orders.reduce(
+        (sum, o) =>
+          sum +
+          (o.remainingAmount !== undefined
+            ? o.remainingAmount
+            : o.totalAmount - (o.paidAmount || 0)),
+        0
+      ),
     [orders]
   );
 
@@ -97,107 +91,103 @@ export default function OrdersPage() {
       orderNumber: o.orderNumber,
       totalAmount: o.totalAmount,
       paidAmount: o.paidAmount || 0,
-      remainingAmount: o.remainingAmount !== undefined ? o.remainingAmount : (o.totalAmount - (o.paidAmount || 0)),
+      remainingAmount:
+        o.remainingAmount !== undefined
+          ? o.remainingAmount
+          : o.totalAmount - (o.paidAmount || 0),
     });
+
+    if (!wpUrl) {
+      info("Müşteri telefon numarası tanımlı değil.");
+      return;
+    }
     openWhatsApp(wpUrl);
-    info("WhatsApp ödeme hatırlatma mesajı açılıyor...");
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-5">
+      {/* Page Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <CheckSquare className="w-5 h-5 text-blue-600" />
-            Sipariş & Ödeme Takibi
+          <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white">
+            Sipariş Takibi
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Müşteri siparişlerinin aşamaları, tahsilatları ve teslimat süreçleri.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Onaylanan siparişlerin teslimat, ödeme ve operasyonel süreçleri
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={loadData}
-            title="Yenile"
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors shadow-sm"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-          </button>
-        </div>
+        <button
+          onClick={loadData}
+          title="Yenile"
+          className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-blue-500" : ""}`} />
+          <span>Yenile</span>
+        </button>
       </div>
 
-      {/* Financial KPI Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-              Toplam Sipariş Hacmi
-            </div>
-            <div className="text-xl font-bold text-slate-900 dark:text-white mt-1">
-              {formatCurrency(totalRevenue)}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">{orders.length} adet sipariş</div>
+      {/* Corporate Financial KPI Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="p-4 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            Toplam Sipariş Hacmi
           </div>
-          <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
-            <TrendingUp className="w-5 h-5" />
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1.5">
+            {formatCurrency(totalRevenue)}
+          </div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            {orders.length} adet sipariş
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-              Toplam Tahsil Edilen
-            </div>
-            <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-              {formatCurrency(totalPaid)}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">Kasaya giren nakit/havale</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800">
+          <div className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+            Tahsil Edilen
           </div>
-          <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1.5">
+            {formatCurrency(totalPaid)}
+          </div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            Kasaya giren tutar
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
-              Toplam Kalan Bakiye
-            </div>
-            <div className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1">
-              {formatCurrency(totalRemaining > 0 ? totalRemaining : 0)}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">Bekleyen müşteri alacağı</div>
+        <div className="p-4 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800">
+          <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+            Kalan Bakiye
           </div>
-          <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400">
-            <AlertCircle className="w-5 h-5" />
+          <div className="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1.5">
+            {formatCurrency(totalRemaining > 0 ? totalRemaining : 0)}
+          </div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            Müşteri açık hesabı
           </div>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3 shadow-sm">
-        <div className="flex flex-col md:flex-row items-center gap-3">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg p-3 sm:p-4 space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
           {/* Search Input */}
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Sipariş No veya Müşteri Ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-xs focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full pl-9 pr-3.5 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-xs focus:ring-1 focus:ring-blue-500 outline-none"
             />
           </div>
 
           {/* Status Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          <div className="flex items-center gap-1 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
             <button
               onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-2.5 py-1.5 rounded text-xs font-medium whitespace-nowrap transition-colors ${
                 statusFilter === "all"
-                  ? "bg-slate-900 text-white dark:bg-blue-600"
+                  ? "bg-slate-900 text-white dark:bg-blue-600 font-semibold"
                   : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200"
               }`}
             >
@@ -209,7 +199,7 @@ export default function OrdersPage() {
                 <button
                   key={st.value}
                   onClick={() => setStatusFilter(st.value)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`px-2.5 py-1.5 rounded text-xs font-medium whitespace-nowrap transition-colors ${
                     statusFilter === st.value
                       ? "bg-blue-600 text-white font-semibold"
                       : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200"
@@ -223,149 +213,215 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {/* Orders Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+      {/* Orders List */}
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
         {loading ? (
-          <div className="py-20 text-center text-slate-400 flex items-center justify-center gap-2">
-            <RefreshCw className="w-5 h-5 animate-spin text-blue-500" />
+          <div className="py-16 text-center text-slate-400 flex items-center justify-center gap-2 text-xs">
+            <RefreshCw className="w-4 h-4 animate-spin text-blue-500" />
             <span>Siparişler yükleniyor...</span>
           </div>
         ) : filteredOrders.length === 0 ? (
-          <div className="py-20 text-center space-y-3">
-            <CheckSquare className="w-12 h-12 text-slate-300 mx-auto" />
-            <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          <div className="py-16 text-center space-y-2">
+            <div className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Sipariş bulunamadı
             </div>
             <p className="text-xs text-slate-400">
-              Kabul edilen teklifleri onaylayarak buradan siparişe dönüştürebilirsiniz.
+              Onaylanan teklifler siparişe dönüştüğünde burada listelenir.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-semibold">
-                <tr>
-                  <th className="p-4">Sipariş No</th>
-                  <th className="p-4">Müşteri</th>
-                  <th className="p-4">Sipariş / Teslimat</th>
-                  <th className="p-4 text-right">Toplam Tutar</th>
-                  <th className="p-4 text-right">Ödenen</th>
-                  <th className="p-4 text-right">Kalan Bakiye</th>
-                  <th className="p-4">Sipariş Durumu</th>
-                  <th className="p-4 text-center">PDF</th>
-                  <th className="p-4 text-right">İşlemler</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredOrders.map((o) => {
-                  const paid = o.paidAmount || 0;
-                  const remaining = o.remainingAmount !== undefined ? o.remainingAmount : o.totalAmount - paid;
-                  const isPaidComplete = remaining <= 0;
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th className="py-3 px-4 font-semibold">Sipariş No</th>
+                    <th className="py-3 px-4 font-semibold">Müşteri</th>
+                    <th className="py-3 px-4 font-semibold">Tarih</th>
+                    <th className="py-3 px-4 font-semibold text-right">Tutar</th>
+                    <th className="py-3 px-4 font-semibold text-right">Ödenen</th>
+                    <th className="py-3 px-4 font-semibold text-right">Kalan</th>
+                    <th className="py-3 px-4 font-semibold">Durum</th>
+                    <th className="py-3 px-4 font-semibold text-center">PDF</th>
+                    <th className="py-3 px-4 font-semibold text-right">İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {filteredOrders.map((o) => {
+                    const paid = o.paidAmount || 0;
+                    const remaining =
+                      o.remainingAmount !== undefined
+                        ? o.remainingAmount
+                        : o.totalAmount - paid;
+                    const isPaidComplete = remaining <= 0;
 
-                  return (
-                    <tr
-                      key={o.id}
-                      onClick={() => setSelectedOrderId(o.id)}
-                      className="hover:bg-blue-50/40 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
-                    >
-                      <td className="p-4">
-                        <div className="font-bold text-slate-900 dark:text-white">
-                          {o.orderNumber}
-                        </div>
-                        <div className="text-[10px] text-slate-400 font-mono">
-                          {new Date(o.createdAt).toLocaleTimeString("tr-TR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="font-semibold text-slate-800 dark:text-slate-200">
-                          {o.customerName}
-                        </div>
-                        {o.customerPhone && (
-                          <div className="text-[11px] text-slate-400">{o.customerPhone}</div>
-                        )}
-                      </td>
-                      <td className="p-4">
-                        <div className="text-slate-700 dark:text-slate-300">
-                          {new Date(o.orderDate).toLocaleDateString("tr-TR")}
-                        </div>
-                        {o.expectedDeliveryDate && (
-                          <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium">
-                            Teslim: {new Date(o.expectedDeliveryDate).toLocaleDateString("tr-TR")}
+                    return (
+                      <tr
+                        key={o.id}
+                        onClick={() => setSelectedOrderId(o.id)}
+                        className="hover:bg-slate-50 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
+                      >
+                        <td className="py-3 px-4">
+                          <div className="font-semibold text-slate-900 dark:text-white">
+                            {o.orderNumber}
                           </div>
-                        )}
-                      </td>
-                      <td className="p-4 text-right font-bold text-slate-900 dark:text-white">
-                        {formatCurrency(o.totalAmount)}
-                      </td>
-                      <td className="p-4 text-right font-semibold text-emerald-600 dark:text-emerald-400">
-                        {formatCurrency(paid)}
-                      </td>
-                      <td className="p-4 text-right">
-                        {isPaidComplete ? (
-                          <span className="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400 text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> 0 ₺
-                          </span>
-                        ) : (
-                          <span className="font-bold text-amber-600 dark:text-amber-400 text-xs">
-                            {formatCurrency(remaining)}
-                          </span>
-                        )}
-                      </td>
-                      <td className="p-4">
-                        <StatusBadge
-                          type="order"
-                          status={o.status}
-                          size="sm"
-                        />
-                      </td>
-                      <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
-                        {o.orderPdfUrl ? (
-                          <a
-                            href={o.orderPdfUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-800"
-                            title="PDF Belgesini Aç"
-                          >
-                            <FileText className="w-3.5 h-3.5" /> Belge
-                          </a>
-                        ) : (
-                          <span className="text-[11px] text-slate-400">-</span>
-                        )}
-                      </td>
-                      <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1.5">
-                          {/* WhatsApp Reminder Button if remaining > 0 */}
-                          {!isPaidComplete && (
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="font-medium text-slate-800 dark:text-slate-200">
+                            {o.customerName}
+                          </div>
+                          {o.customerPhone && (
+                            <div className="text-[11px] text-slate-400">{o.customerPhone}</div>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
+                          {new Date(o.orderDate).toLocaleDateString("tr-TR")}
+                        </td>
+                        <td className="py-3 px-4 text-right font-semibold text-slate-900 dark:text-white">
+                          {formatCurrency(o.totalAmount)}
+                        </td>
+                        <td className="py-3 px-4 text-right font-medium text-emerald-600 dark:text-emerald-400">
+                          {formatCurrency(paid)}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          {isPaidComplete ? (
+                            <span className="text-emerald-600 dark:text-emerald-400 font-medium">0 ₺</span>
+                          ) : (
+                            <span className="font-semibold text-amber-600 dark:text-amber-400">
+                              {formatCurrency(remaining)}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          <StatusBadge type="order" status={o.status} size="sm" />
+                        </td>
+                        <td className="py-3 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                          {o.orderPdfUrl ? (
+                            <a
+                              href={o.orderPdfUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-xs font-medium text-blue-600 hover:underline"
+                            >
+                              PDF
+                            </a>
+                          ) : (
+                            <span className="text-slate-400">-</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-1.5">
+                            {!isPaidComplete && (
+                              <button
+                                type="button"
+                                onClick={(e) => handleWhatsAppPaymentClick(e, o)}
+                                className="p-1 rounded text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                                title="WhatsApp Ödeme Hatırlatması"
+                              >
+                                <MessageCircle className="w-4 h-4" />
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={(e) => handleWhatsAppPaymentClick(e, o)}
-                              className="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors"
-                              title="WhatsApp ile Kalan Ödeme Bildirimi Gönder"
+                              onClick={() => setSelectedOrderId(o.id)}
+                              className="px-2 py-1 rounded text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                             >
-                              <MessageCircle className="w-4 h-4" />
+                              Detay
                             </button>
-                          )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
 
-                          <button
-                            type="button"
-                            onClick={() => setSelectedOrderId(o.id)}
-                            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/50 flex items-center gap-1 transition-colors"
-                          >
-                            <span>Detay & Ödeme</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </button>
+            {/* Mobile Card List View */}
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+              {filteredOrders.map((o) => {
+                const paid = o.paidAmount || 0;
+                const remaining =
+                  o.remainingAmount !== undefined
+                    ? o.remainingAmount
+                    : o.totalAmount - paid;
+                const isPaidComplete = remaining <= 0;
+
+                return (
+                  <div
+                    key={o.id}
+                    onClick={() => setSelectedOrderId(o.id)}
+                    className="p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-xs text-slate-900 dark:text-white">
+                        {o.orderNumber}
+                      </span>
+                      <StatusBadge type="order" status={o.status} size="sm" />
+                    </div>
+                    <div className="text-xs text-slate-800 dark:text-slate-200 mt-1 font-medium">
+                      {o.customerName}
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">
+                      {new Date(o.orderDate).toLocaleDateString("tr-TR")}
+                    </div>
+
+                    <div className="mt-2 grid grid-cols-3 gap-1 bg-slate-50 dark:bg-slate-800/40 p-2 rounded text-[11px]">
+                      <div>
+                        <div className="text-slate-400">Toplam</div>
+                        <div className="font-semibold text-slate-900 dark:text-white mt-0.5">
+                          {formatCurrency(o.totalAmount)}
                         </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400">Ödenen</div>
+                        <div className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                          {formatCurrency(paid)}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400">Kalan</div>
+                        <div className={`font-semibold mt-0.5 ${isPaidComplete ? "text-slate-400" : "text-amber-600 dark:text-amber-400"}`}>
+                          {isPaidComplete ? "0 ₺" : formatCurrency(remaining)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                      {!isPaidComplete && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleWhatsAppPaymentClick(e, o)}
+                          className="px-2 py-1 rounded text-xs font-medium text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 inline-flex items-center gap-1"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>WhatsApp</span>
+                        </button>
+                      )}
+                      {o.orderPdfUrl && (
+                        <a
+                          href={o.orderPdfUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2 py-1 rounded text-xs font-medium text-blue-600 border border-blue-200 dark:border-blue-800"
+                        >
+                          PDF
+                        </a>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedOrderId(o.id)}
+                        className="px-2.5 py-1 rounded text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800"
+                      >
+                        Detay
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
 

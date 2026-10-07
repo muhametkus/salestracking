@@ -6,28 +6,10 @@ import { quotationService } from "@/lib/api";
 import { QuotationDetail, QuotationStatus } from "@/types";
 import { StatusBadge } from "@/components/UI/StatusBadge";
 import {
-  ShieldCheck,
-  Calendar,
-  Clock,
-  User,
-  Building2,
-  Phone,
-  Mail,
-  MapPin,
-  FileText,
   ExternalLink,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Truck,
-  Wrench,
+  FileText,
   Loader2,
-  Check,
-  Receipt,
-  FileCheck,
-  PackageCheck,
-  Info,
-  Sparkles,
+  X,
 } from "lucide-react";
 
 export default function CustomerApprovalPage() {
@@ -93,28 +75,29 @@ export default function CustomerApprovalPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex flex-col items-center justify-center p-6 text-slate-500">
-        <Loader2 className="w-9 h-9 animate-spin text-blue-600 mb-3" />
-        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] flex flex-col items-center justify-center p-4 text-slate-500">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
+        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
           Teklif belgesi yükleniyor...
         </p>
-        <span className="text-xs text-slate-400 mt-1">Lütfen bekleyin</span>
       </div>
     );
   }
 
   if (errorMsg || !detail) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mb-3 shadow-inner">
-          <AlertCircle className="w-7 h-7" />
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] flex flex-col items-center justify-center p-4 text-center">
+        <div className="max-w-md w-full bg-white dark:bg-[#111827] rounded-lg p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <div className="w-10 h-10 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 flex items-center justify-center mx-auto">
+            <X className="w-5 h-5" />
+          </div>
+          <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+            Teklif Belgesine Ulaşılamadı
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            {errorMsg || "Ulaşmaya çalıştığınız teklif bağlantısı geçersiz, süresi dolmuş veya kaldırılmış olabilir."}
+          </p>
         </div>
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-          Teklif Belgesine Ulaşılamadı
-        </h2>
-        <p className="text-xs text-slate-500 max-w-sm mt-1 leading-relaxed">
-          {errorMsg || "Ulaşmaya çalıştığınız teklif bağlantısı geçersiz, süresi dolmuş veya sistemden kaldırılmış olabilir."}
-        </p>
       </div>
     );
   }
@@ -128,41 +111,39 @@ export default function CustomerApprovalPage() {
     detail.status === QuotationStatus.Approved ||
     actionDone === "accepted";
 
-  // Delivery conditions calculations
   const isAssembly = detail.isAssemblyIncluded !== false;
   const isDelivery = detail.isDeliveryIncluded !== false;
 
   return (
-    <div className="min-h-screen bg-slate-100/70 dark:bg-[#090d16] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Brand & Portal Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/90 dark:border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
-              <ShieldCheck className="w-5 h-5" />
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] py-6 sm:py-10 px-3.5 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+        {/* Top Header Bar */}
+        <div className="bg-white dark:bg-[#111827] rounded-lg border border-slate-200 dark:border-slate-800 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded bg-slate-900 dark:bg-blue-600 text-white flex items-center justify-center font-bold text-xs tracking-wider shrink-0">
+              ST
             </div>
             <div>
-              <div className="font-bold text-base text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                <span>Satış Takip Portalı</span>
-                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                  Resmi Onay Sayfası
-                </span>
+              <div className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-white leading-tight">
+                Satış Takip Portalı
               </div>
-              <div className="text-xs text-slate-500">Müşteri Teklif Değerlendirme & Kabul Sistemi</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                Resmi Müşteri Teklif Onay Ekranı
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <StatusBadge type="quotation" status={detail.status} size="md" />
+          <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+            <StatusBadge type="quotation" status={detail.status} size="sm" />
             {detail.quotationPdfUrl && (
               <a
                 href={detail.quotationPdfUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors"
               >
                 <FileText className="w-3.5 h-3.5 text-blue-600" />
-                <span>Teklif PDF</span>
+                <span>PDF İndir</span>
                 <ExternalLink className="w-3 h-3 text-slate-400" />
               </a>
             )}
@@ -171,284 +152,216 @@ export default function CustomerApprovalPage() {
 
         {/* Accepted Confirmation Banner */}
         {isAccepted && (
-          <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-3.5 animate-in fade-in shadow-sm">
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-              <Check className="w-5 h-5 stroke-[2.5]" />
-            </div>
+          <div className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 flex items-start gap-3">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
             <div>
-              <h3 className="font-bold text-sm text-emerald-950 dark:text-emerald-300">
+              <h3 className="font-semibold text-xs text-emerald-900 dark:text-emerald-200">
                 Teklif Tarafınızca Onaylandı
               </h3>
-              <p className="text-xs text-emerald-800 dark:text-emerald-400/90 mt-0.5 leading-relaxed">
-                Bu teklif kabul edilerek kesin sipariş sürecine alınmıştır. İlgili operasyon ve teslimat planlaması başlatılmıştır.
+              <p className="text-[11px] text-emerald-800 dark:text-emerald-300/90 mt-0.5 leading-relaxed">
+                Bu teklif kabul edilerek kesin sipariş sürecine alınmıştır. Operasyonel hazırlıklar başlatılmıştır.
               </p>
             </div>
           </div>
         )}
 
         {/* Main Quotation Sheet */}
-        <div className="bg-white dark:bg-[#0f172a] rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm overflow-hidden p-6 sm:p-9 space-y-7">
-          {/* Top Sheet Header */}
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 pb-6 border-b border-slate-100 dark:border-slate-800/80">
+        <div className="bg-white dark:bg-[#111827] rounded-lg border border-slate-200 dark:border-slate-800 p-4 sm:p-7 space-y-6 shadow-xs">
+          {/* Header Info */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[11px] font-bold uppercase tracking-wider mb-2">
-                <FileCheck className="w-3.5 h-3.5" />
-                <span>Satış Teklifi</span>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                Satış Teklifi
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">
                 {detail.quotationNumber}
               </h1>
-              <div className="flex flex-wrap items-center gap-4 mt-2.5 text-xs text-slate-500 dark:text-slate-400">
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Teklif Tarihi: {new Date(detail.quotationDate).toLocaleDateString("tr-TR")}</span>
-                </div>
+              <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-500 dark:text-slate-400">
+                <span>Tarih: {new Date(detail.quotationDate).toLocaleDateString("tr-TR")}</span>
                 {detail.validUntil && (
-                  <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>Geçerlilik: {new Date(detail.validUntil).toLocaleDateString("tr-TR")}</span>
-                  </div>
+                  <span className="text-amber-700 dark:text-amber-400 font-medium">
+                    Son Geçerlilik: {new Date(detail.validUntil).toLocaleDateString("tr-TR")}
+                  </span>
                 )}
               </div>
             </div>
 
-            {/* Customer Information Box */}
-            <div className="bg-slate-50/80 dark:bg-slate-800/50 p-4 sm:p-5 rounded-2xl border border-slate-200/70 dark:border-slate-800 text-xs min-w-[280px]">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-                <User className="w-3 h-3" /> Müşteri Bilgileri
+            {/* Customer Information Card */}
+            <div className="bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 text-xs w-full sm:w-72">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">
+                Müşteri Bilgileri
               </div>
-              <div className="font-bold text-slate-900 dark:text-white text-sm">
+              <div className="font-semibold text-slate-900 dark:text-white">
                 {detail.customer?.companyName || detail.customerName}
               </div>
               {detail.customer?.companyName && (
-                <div className="text-slate-600 dark:text-slate-400 font-medium mt-0.5">
+                <div className="text-slate-600 dark:text-slate-400 mt-0.5">
                   Yetkili: {detail.customer.firstName} {detail.customer.lastName}
                 </div>
               )}
               {detail.customer?.phone && (
-                <div className="flex items-center gap-1.5 text-slate-500 mt-1.5">
-                  <Phone className="w-3 h-3 text-slate-400" />
-                  <span>{detail.customer.phone}</span>
+                <div className="text-slate-600 dark:text-slate-400 mt-1 font-medium">
+                  {detail.customer.phone}
                 </div>
               )}
               {detail.customer?.email && (
-                <div className="flex items-center gap-1.5 text-slate-500 mt-0.5">
-                  <Mail className="w-3 h-3 text-slate-400" />
-                  <span>{detail.customer.email}</span>
+                <div className="text-slate-500 mt-0.5 truncate">
+                  {detail.customer.email}
                 </div>
               )}
               {detail.customer?.address && (
-                <div className="flex items-start gap-1.5 text-slate-500 mt-1.5 text-[11px] leading-snug">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>{detail.customer.address}</span>
+                <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                  {detail.customer.address}
                 </div>
               )}
             </div>
           </div>
 
-          {/* TEKLİF KOŞULLARI & TAAHHÜTLER (Teklif Koşulları Kartları) */}
-          <div className="space-y-3">
+          {/* Quotation Conditions (Clean Corporate Cards) */}
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <PackageCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span>Teklif Koşulları & Taahhütler</span>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                Teklif Koşulları
               </h3>
-              <span className="text-[11px] text-slate-400 font-medium">
-                Bu teklifte geçerli operasyonel koşullar
+              <span className="text-[11px] text-slate-400">
+                Geçerli operasyonel parametreler
               </span>
             </div>
 
-            <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAssembly ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-3.5`}>
-              {/* 1. Montaj (ve Teslimat) Koşulu */}
-              {isAssembly ? (
-                /* Montaj Dahil Durumunda: Montaj ve Teslimat tek kart olarak belirtilir */
-                <div className="p-4 rounded-2xl border transition-all bg-purple-50/50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-900/60">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-purple-600 text-white shadow-sm">
-                      <Wrench className="w-4 h-4" />
-                    </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-300">
-                      Dahil
-                    </span>
-                  </div>
-                  <div className="font-bold text-xs text-slate-900 dark:text-white">
-                    Montaj ve Teslimat Dahildir
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                    Uzman teknik ekibimiz tarafından sahada montaj, kurulum ve adrese teslimat fiyata dahildir.
-                  </p>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAssembly ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-3`}>
+              {/* Montaj Koşulu */}
+              <div className="p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                    {isAssembly ? "Montaj & Teslimat" : "Montaj Hizmeti"}
+                  </span>
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${
+                    isAssembly
+                      ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                      : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                  }`}>
+                    {isAssembly ? "Dahil" : "Hariç"}
+                  </span>
                 </div>
-              ) : (
-                /* Montaj Hariç Durumunda */
-                <div className="p-4 rounded-2xl border transition-all bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-200 dark:bg-slate-800 text-slate-500">
-                      <Wrench className="w-4 h-4" />
-                    </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400">
-                      Hariç
-                    </span>
-                  </div>
-                  <div className="font-bold text-xs text-slate-900 dark:text-white">
-                    Montaj Hariçtir
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                    Montaj hizmeti tercih edilmediği takdirde, ürünün teslimatı kurulmadan demonte olarak gerçekleştirilecektir.
-                  </p>
-                </div>
-              )}
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                  {isAssembly
+                    ? "Montaj ve adrese teslimat fiyata dahildir."
+                    : "Montaj hariçtir, teslimat demonte olarak yapılır."}
+                </p>
+              </div>
 
-              {/* 2. Teslimat Koşulu - Sadece Montaj hariç ise ayrı kart olarak gösterilir */}
+              {/* Teslimat Koşulu (Eğer montaj hariç ise) */}
               {!isAssembly && (
-                <div className={`p-4 rounded-2xl border transition-all ${
-                  isDelivery
-                    ? "bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/60"
-                    : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800"
-                }`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                <div className="p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                      Teslimat Hizmeti
+                    </span>
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${
                       isDelivery
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "bg-slate-200 dark:bg-slate-800 text-slate-500"
-                    }`}>
-                      <Truck className="w-4 h-4" />
-                    </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                      isDelivery
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300"
-                        : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
+                        ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                        : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                     }`}>
                       {isDelivery ? "Dahil" : "Hariç"}
                     </span>
                   </div>
-                  <div className="font-bold text-xs text-slate-900 dark:text-white">
-                    {detail.deliveryStatusText || (isDelivery ? "Teslimat Dahildir" : "Teslimat Hariçtir")}
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
                     {isDelivery
-                      ? "Belirtilen teslim adresine nakliye ve lojistik masrafları tarafımıza aittir."
-                      : "Lojistik ve nakliye alıcı firma/müşteri tarafından karşılanacaktır."}
+                      ? "Teslim adresine nakliye tarafımıza aittir."
+                      : "Nakliye sorumluluğu alıcıdadır. Mağazadan teslim edilecektir."}
                   </p>
                 </div>
               )}
 
-              {/* 3. Teslim Tarihi */}
-              <div className="p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/50 dark:bg-indigo-950/20">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-sm">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300">
-                    Teslim Tarihi
+              {/* Teslim Tarihi */}
+              <div className="p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                    Teslimat Tarihi
+                  </span>
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    {detail.deliveryDays ? `${detail.deliveryDays} İş Günü` : "Planlanacak"}
                   </span>
                 </div>
-                <div className="font-bold text-xs text-indigo-950 dark:text-indigo-200">
-                  Teslim Tarihi
-                </div>
-                <div className="text-sm font-extrabold text-indigo-600 dark:text-indigo-400 mt-0.5">
+                <div className="text-xs font-semibold text-blue-700 dark:text-blue-400">
                   {detail.expectedDeliveryDate
                     ? new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")
                     : detail.deliveryDays
-                    ? `${detail.deliveryDays} İş Günü`
-                    : "Sipariş Akabinde Planlanır"}
+                    ? `${detail.deliveryDays} iş günü içinde`
+                    : "Sipariş sonrasında belirlenir"}
                 </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">
-                  {detail.deliveryDays
-                    ? `Onay tarihinden itibaren en geç ${detail.deliveryDays} gün içinde teslim edilir. Mücbir sebepler ve operasyonel aksaklıklar sebebiyle doğabilecek istisnai gecikmeler saklıdır.`
-                    : "Ürün ve tedarik durumuna göre en hızlı sürede teslimat yapılır."}
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-snug">
+                  Ödeme sonrası teslimat süreci başlar. (Mücbir sebepler ve operasyonel
+aksaklıklar sebebiyle doğabilecek istisnai gecikmeler saklıdır.)
                 </p>
               </div>
 
-              {/* 4. KDV Uygulaması */}
-              <div className={`p-4 rounded-2xl border ${
-                detail.isVatIncluded !== false
-                  ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/60"
-                  : "bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/60"
-              }`}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+              {/* KDV Durumu */}
+              <div className="p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                    KDV Durumu
+                  </span>
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${
                     detail.isVatIncluded !== false
-                      ? "bg-emerald-600 text-white shadow-sm"
-                      : "bg-amber-600 text-white shadow-sm"
-                  }`}>
-                    <Receipt className="w-4 h-4" />
-                  </div>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    detail.isVatIncluded !== false
-                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300"
-                      : "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300"
+                      ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+                      : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
                   }`}>
                     {detail.isVatIncluded !== false ? "KDV Dahil" : "KDV Hariç"}
                   </span>
                 </div>
-                <div className="font-bold text-xs text-slate-900 dark:text-white">
-                  KDV Uygulaması
-                </div>
-                <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-0.5">
-                  {detail.isVatIncluded !== false ? (detail.vatStatusText || "Fiyatlara KDV Dahildir") : "KDV Hariçtir."}
-                </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
                   {detail.isVatIncluded !== false
-                    ? "KDV toplam fiyata dahildir."
-                    : "Anlaşılan Tutara KDV dahil değildir."}
+                    ? "Toplam fiyata tüm vergiler dahildir."
+                    : "Belirtilen tutara KDV dahil değildir."}
                 </p>
               </div>
             </div>
-
-            {/* Montaj Hariç Durumu Bilgilendirme Kutusu */}
-            {!isAssembly && (
-              <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/50 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
-                <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                <span className="leading-relaxed">
-                  Montaj hizmeti tercih edilmediği takdirde, ürünün teslimatı kurulmadan demonte olarak gerçekleştirilecektir.
-                </span>
-              </div>
-            )}
           </div>
 
           {/* Notes if present */}
           {detail.notes && (
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 text-xs space-y-1">
-              <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-blue-600" />
-                Özel Teklif Açıklaması ve Şartlar:
-              </div>
-              <p className="text-slate-600 dark:text-slate-400 pl-5 leading-relaxed">
+            <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs space-y-1">
+              <span className="font-semibold text-slate-800 dark:text-slate-200">
+                Teklif Notu & Şartlar:
+              </span>
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                 {detail.notes}
               </p>
             </div>
           )}
 
-          {/* Items Table (Clean, Professional, No Operational Badges Column) */}
-          <div className="space-y-3">
+          {/* Quotation Items: Dual Desktop Table + Mobile Card View */}
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Teklif Kapsamındaki Ürün & Hizmet Kalemleri
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                Ürün & Hizmet Kalemleri
               </h3>
               <span className="text-[11px] text-slate-400">
-                Toplam {detail.items.length} Kalem
+                {detail.items.length} Kalem
               </span>
             </div>
 
-            <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 dark:bg-slate-800/70 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+            {/* Desktop Table */}
+            <div className="hidden md:block border border-slate-200 dark:border-slate-800 rounded-lg overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[500px]">
+                <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
                   <tr>
-                    <th className="p-3.5 w-12 text-center text-slate-400 font-bold">#</th>
-                    <th className="p-3.5">Ürün / Hizmet Açıklaması</th>
-                    <th className="p-3.5 text-center w-24">Miktar</th>
-                    <th className="p-3.5 text-right w-32">Birim Fiyat</th>
-                    <th className="p-3.5 text-right w-36">Toplam Tutar</th>
+                    <th className="py-2.5 px-3.5 w-10 text-center font-semibold">#</th>
+                    <th className="py-2.5 px-3.5 font-semibold">Ürün / Hizmet Açıklaması</th>
+                    <th className="py-2.5 px-3.5 text-center w-24 font-semibold">Miktar</th>
+                    <th className="py-2.5 px-3.5 text-right w-32 font-semibold">Birim Fiyat</th>
+                    <th className="py-2.5 px-3.5 text-right w-36 font-semibold">Toplam Tutar</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {detail.items.map((item, index) => (
-                    <tr key={item.id || index} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="p-3.5 text-center text-slate-400 font-medium">
+                    <tr key={item.id || index} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                      <td className="py-2.5 px-3.5 text-center text-slate-400 font-medium">
                         {index + 1}
                       </td>
-                      <td className="p-3.5">
-                        <div className="font-bold text-slate-900 dark:text-white text-xs">
+                      <td className="py-2.5 px-3.5">
+                        <div className="font-semibold text-slate-900 dark:text-white">
                           {item.productName}
                         </div>
                         {item.description && (
@@ -457,13 +370,13 @@ export default function CustomerApprovalPage() {
                           </div>
                         )}
                       </td>
-                      <td className="p-3.5 text-center font-bold text-slate-800 dark:text-slate-200">
+                      <td className="py-2.5 px-3.5 text-center font-medium text-slate-800 dark:text-slate-200">
                         {item.quantity} Adet
                       </td>
-                      <td className="p-3.5 text-right font-medium text-slate-700 dark:text-slate-300">
+                      <td className="py-2.5 px-3.5 text-right text-slate-700 dark:text-slate-300">
                         {item.unitPrice.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
                       </td>
-                      <td className="p-3.5 text-right font-bold text-slate-900 dark:text-white">
+                      <td className="py-2.5 px-3.5 text-right font-semibold text-slate-900 dark:text-white">
                         {item.totalPrice.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
                       </td>
                     </tr>
@@ -471,30 +384,58 @@ export default function CustomerApprovalPage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile Card List View */}
+            <div className="md:hidden divide-y divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
+              {detail.items.map((item, index) => (
+                <div key={item.id || index} className="p-3 bg-white dark:bg-[#111827] space-y-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="font-semibold text-xs text-slate-900 dark:text-white">
+                      <span className="text-slate-400 mr-1.5">#{index + 1}</span>
+                      {item.productName}
+                    </div>
+                    <span className="text-xs font-semibold text-slate-900 dark:text-white shrink-0">
+                      {item.totalPrice.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
+                    </span>
+                  </div>
+
+                  {item.description && (
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                      {item.description}
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                    <span>Miktar: {item.quantity} Adet</span>
+                    <span>Birim: {item.unitPrice.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Grand Total Summary Box */}
-          <div className="flex flex-col sm:flex-row items-center justify-between p-5 rounded-2xl bg-gradient-to-r from-slate-50 to-blue-50/40 dark:from-slate-800/60 dark:to-blue-950/20 border border-slate-200/90 dark:border-slate-800 gap-4">
-            <div className="flex items-center gap-3">
-              <span className={`text-xs font-bold px-3 py-1 rounded-full border ${
+          <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`text-xs font-medium px-2 py-0.5 rounded ${
                 detail.isVatIncluded !== false
-                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
-                  : "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800"
+                  ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+                  : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
               }`}>
-                {detail.isVatIncluded !== false ? (detail.vatStatusText || "✓ Fiyatlara KDV Dahildir") : "⚠️ KDV Hariçtir."}
+                {detail.isVatIncluded !== false ? "KDV Dahildir" : "KDV Hariçtir"}
               </span>
               {detail.expectedDeliveryDate && (
-                <span className="text-[11px] text-indigo-700 dark:text-indigo-300 font-medium hidden sm:inline-block">
-                  Teslim Tarihi: {new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")}
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  Teslim: {new Date(detail.expectedDeliveryDate).toLocaleDateString("tr-TR")}
                 </span>
               )}
             </div>
 
-            <div className="flex items-baseline gap-3 text-right">
-              <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+            <div className="flex items-baseline justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-slate-700">
+              <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Teklif Toplamı:
               </span>
-              <span className="text-2xl sm:text-3xl font-black text-blue-600 dark:text-blue-400 tracking-tight">
+              <span className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {detail.totalAmount.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺
               </span>
             </div>
@@ -502,76 +443,66 @@ export default function CustomerApprovalPage() {
 
           {/* Rejection Prompt Box */}
           {showRejectBox && (
-            <div className="p-5 rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/30 space-y-3 animate-in fade-in">
-              <div className="font-bold text-xs text-rose-900 dark:text-rose-300 flex items-center gap-1.5">
-                <XCircle className="w-4 h-4 text-rose-600" />
-                Teklifi Reddetme Nedeni (Opsiyonel)
+            <div className="p-4 rounded-lg border border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20 space-y-3">
+              <div className="font-semibold text-xs text-rose-800 dark:text-rose-300">
+                Teklifi Reddetme Gerekçesi (Opsiyonel)
               </div>
               <textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
-                placeholder="Lütfen teklif koşulları veya fiyatla ilgili geri bildiriminizi yazınız..."
+                placeholder="Fiyat, koşullar veya revize talebiniz varsa belirtebilirsiniz..."
                 rows={2}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none focus:ring-1 focus:ring-rose-500"
               />
-              <div className="flex justify-end gap-2 pt-1">
+              <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowRejectBox(false)}
-                  className="px-3.5 py-1.5 text-xs text-slate-500 hover:text-slate-700 font-medium"
+                  className="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-800 dark:text-slate-400 font-medium"
                 >
-                  İptal
+                  Vazgeç
                 </button>
                 <button
                   type="button"
                   onClick={handleReject}
                   disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                  className="px-4 py-1.5 rounded-md bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium transition-colors"
                 >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  <span>Reddetmeyi Onayla</span>
+                  {submitting ? "İşleniyor..." : "Reddetmeyi Onayla"}
                 </button>
               </div>
             </div>
           )}
 
-          {/* Customer Approval CTA Actions */}
+          {/* Customer Approval Actions */}
           {isPending && !actionDone && (
-            <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => setShowRejectBox(true)}
                 disabled={submitting}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-xl border border-rose-300 dark:border-rose-800/80 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-bold transition-colors"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-medium transition-colors text-center"
               >
-                <XCircle className="w-4 h-4" />
-                <span>Teklifi Kabul Etmiyorum</span>
+                Teklifi Kabul Etmiyorum
               </button>
 
               <button
                 type="button"
                 onClick={handleAccept}
                 disabled={submitting}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-9 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-sm font-black shadow-lg shadow-emerald-600/25 transition-all"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2"
               >
-                {submitting ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="w-5 h-5" />
-                )}
+                {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                 <span>Teklifi Onayla ve Kabul Et</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Legal & Security Footer */}
-        <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 px-2 gap-2">
-          <span>Bu onay bağlantısı sadece ilgili müşteri ve teklif için özel olarak üretilmiştir.</span>
-          <span className="flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
-            256-bit Güvenli İletişim
-          </span>
+        {/* Security / System Footer */}
+        <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 px-1 gap-1">
+          <span>Bu bağlantı ilgili müşteri ve teklif için özel olarak üretilmiştir.</span>
+          <span>Güvenli İletişim</span>
         </div>
       </div>
     </div>

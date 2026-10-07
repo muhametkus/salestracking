@@ -2,36 +2,16 @@
 
 import React, { useState } from "react";
 import { useNotification } from "@/components/UI/NotificationContext";
-import {
-  Settings,
-  Layers,
-  MessageCircle,
-  Smartphone,
-  Building2,
-  Clock,
-  Hammer,
-  CheckCircle2,
-  Package,
-  Truck,
-  Calendar,
-  Wrench,
-  ShieldCheck,
-  XCircle,
-  Copy,
-  Check,
-  Save,
-  Info,
-} from "lucide-react";
+import { Copy, Check, Save } from "lucide-react";
 
 export default function SettingsPage() {
   const { success } = useNotification();
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  // SMS Gateway state (ready for future hookup)
+  // SMS Gateway state
   const [smsProvider, setSmsProvider] = useState("netgsm");
   const [smsHeader, setSmsHeader] = useState("FIRMAADI");
   const [smsApiKey, setSmsApiKey] = useState("");
-  const [smsActive, setSmsActive] = useState(false);
 
   // Company info state
   const [companyName, setCompanyName] = useState("SalesTracking Mobilya & Tasarım A.Ş.");
@@ -48,156 +28,129 @@ export default function SettingsPage() {
 
   const handleSaveCompany = (e: React.FormEvent) => {
     e.preventDefault();
-    success("Firma bilgileri başarıyla kaydedildi.");
+    success("Firma bilgileri kaydedildi.");
   };
 
   const handleSaveSms = (e: React.FormEvent) => {
     e.preventDefault();
-    success("SMS servisi ayarları kaydedildi (Şu an aktif bildirim yöntemi: WhatsApp).");
+    success("SMS servisi ayarları kaydedildi (Aktif bildirim: WhatsApp).");
   };
 
   const statusDefinitions = [
     {
       name: "Oluşturuldu",
-      icon: Clock,
-      color: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800",
-      description: "Teklif onaylandıktan veya manuel olarak girildikten sonra sisteme ilk düşen başlangıç sipariş kaydıdır.",
+      dotColor: "bg-slate-500",
+      description: "Teklif onaylandıktan veya manuel girildikten sonra sisteme ilk düşen başlangıç sipariş kaydıdır.",
     },
     {
       name: "Üretimde",
-      icon: Hammer,
-      color: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
-      description: "Üretim gerektiren mobilya, dolap ve özel imalat kalemlerinin atölye/fabrikada üretim sürecine girdiği aşamadır.",
+      dotColor: "bg-amber-500",
+      description: "Üretim gerektiren mobilya, dolap ve özel imalat kalemlerinin atölyede imalat sürecine girdiği aşamadır.",
     },
     {
       name: "Üretildi",
-      icon: CheckCircle2,
-      color: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800",
-      description: "İmalatı tamamlanan, kalite kontrol testlerinden geçmiş ve sevkiyata hazır hale getirilen ürünlerin durumudur.",
+      dotColor: "bg-teal-500",
+      description: "İmalatı tamamlanan, kalite testlerinden geçmiş ve sevkiyata hazır ürünlerin durumudur.",
     },
     {
       name: "Tedarik Edildi",
-      icon: Package,
-      color: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-300 dark:border-cyan-800",
-      description: "Harici tedarikçilerden, boyahaneden veya kumaşçılardan temin edilen parçaların depoya giriş yaptığı durumdur.",
+      dotColor: "bg-cyan-500",
+      description: "Harici tedarikçilerden veya boyahaneden temin edilen parçaların depoya giriş yaptığı durumdur.",
     },
     {
       name: "Teslimat Bekliyor",
-      icon: Truck,
-      color: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
-      description: "Tüm ürünleri hazır olan siparişin, müşteri adresine nakliyesi için araç rotalama ve sevkiyat bekleme durumudur.",
+      dotColor: "bg-blue-500",
+      description: "Tüm ürünleri hazır siparişin nakliye ve araç rotalama bekleme durumudur.",
     },
     {
-      name: "Montaj İçin Gün Verilecek",
-      icon: Calendar,
-      color: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800",
-      description: "Montaj Dahil ürünler için müşteriyle iletişime geçilip uygun randevu gününün netleştirildiği aşamadır.",
+      name: "Montaj Günü Bekleniyor",
+      dotColor: "bg-purple-500",
+      description: "Montaj Dahil ürünler için müşteriyle randevu gününün netleştirildiği aşamadır.",
     },
     {
       name: "Montaj Planlandı",
-      icon: Wrench,
-      color: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800",
-      description: "Montaj ekibi, gün ve saat ataması kesinleştirilmiş, takvime işlenmiş sipariş aşamasıdır.",
+      dotColor: "bg-indigo-500",
+      description: "Montaj ekibi, gün ve saat ataması takvime işlenmiş aşamadır.",
     },
     {
-      name: "Sipariş Tamamlandı",
-      icon: ShieldCheck,
-      color: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
-      description: "Teslimatı ve montajı eksiksiz tamamlanmış, tüm tahsilatları alınarak kapatılmış sipariştir.",
+      name: "Tamamlandı",
+      dotColor: "bg-emerald-500",
+      description: "Teslimatı ve montajı eksiksiz tamamlanmış, tahsilatları alınarak kapatılmış sipariştir.",
     },
     {
       name: "İptal Edildi",
-      icon: XCircle,
-      color: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800",
-      description: "Müşteri veya firma tarafından iptal edilen, operasyonu durdurulmuş sipariştir.",
+      dotColor: "bg-rose-500",
+      description: "Müşteri veya firma tarafından operasyonu durdurulmuş sipariştir.",
     },
   ];
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-6 max-w-5xl">
       {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <Settings className="w-5 h-5 text-blue-600" />
+      <div className="pb-2 border-b border-slate-200 dark:border-slate-800">
+        <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white">
           Sistem ve Süreç Ayarları
         </h2>
-        <p className="text-xs text-slate-500 mt-1">
-          Sipariş iş akış durumları, WhatsApp & SMS bildirim şablonları ve firma tanımları.
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          Sipariş iş akış durumları, WhatsApp bildirim şablonları ve kurumsal firma tanımları
         </p>
       </div>
 
       {/* Section 1: Order Status Workflow */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600">
-              <Layers className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Sipariş Durumları & Operasyonel İş Akışı
-              </h3>
-              <p className="text-[11px] text-slate-400">
-                Siparişlerin adım adım ilerlediği tanımlı süreçler ve anlamları
-              </p>
-            </div>
-          </div>
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            Sipariş Durumları & Operasyonel İş Akışı
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Siparişlerin adım adım ilerlediği tanımlı süreçler ve açıklamaları
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
-          {statusDefinitions.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.name}
-                className="p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/30 space-y-2 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${item.color}`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    {item.name}
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {item.description}
-                </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {statusDefinitions.map((item) => (
+            <div
+              key={item.name}
+              className="p-3.5 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20 space-y-1.5"
+            >
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${item.dotColor} shrink-0`} />
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                  {item.name}
+                </span>
               </div>
-            );
-          })}
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Section 2: WhatsApp Messages & Templates */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600">
-            <MessageCircle className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              WhatsApp Hızlı Bildirim Şablonları
-            </h3>
-            <p className="text-[11px] text-slate-400">
-              Tek tıkla müşteriye gönderilen otomatik mesaj taslakları (Telefon numarası ve linkler otomatik eklenir)
-            </p>
-          </div>
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            WhatsApp Bildirim Şablonları
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Müşterilere gönderilen otomatik hazır mesaj metinleri
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          {/* Template 1: Quotation Approval */}
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 space-y-2 flex flex-col justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          {/* Template 1 */}
+          <div className="p-3.5 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 flex flex-col justify-between space-y-3">
             <div>
-              <div className="font-bold text-xs text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span>1. Teklif Onay Linki Mesajı</span>
-                <span className="text-[10px] text-blue-600 font-semibold">Teklifler Bölümü</span>
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span>Teklif Onay Linki</span>
+                <span className="text-[10px] text-blue-600 font-medium">Teklifler</span>
               </div>
-              <div className="mt-2 p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <div className="mt-2 p-2.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0b0f19] font-mono text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
 {`Sayın {Müşteri Adı},
 {Teklif No} numaralı teklifiniz hazırlanmıştır.
 Teklifi incelemek ve onaylamak için:
-🔗 {Onay Linki}
+{Onay Linki}
 Sorularınız için bize yazabilirsiniz.`}
               </div>
             </div>
@@ -206,29 +159,29 @@ Sorularınız için bize yazabilirsiniz.`}
               onClick={() =>
                 copyTemplate(
                   "quote",
-                  "Sayın {Müşteri Adı},\n{Teklif No} numaralı teklifiniz hazırlanmıştır.\nTeklifi incelemek ve onaylamak için:\n🔗 {Onay Linki}\nSorularınız için bize yazabilirsiniz."
+                  "Sayın {Müşteri Adı},\n{Teklif No} numaralı teklifiniz hazırlanmıştır.\nTeklifi incelemek ve onaylamak için:\n{Onay Linki}\nSorularınız için bize yazabilirsiniz."
                 )
               }
-              className="mt-2 w-full py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 flex items-center justify-center gap-1.5"
+              className="w-full py-1.5 rounded border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 flex items-center justify-center gap-1.5 transition-colors"
             >
               {copiedKey === "quote" ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedKey === "quote" ? "Kopyalandı" : "Metni Kopyala"}</span>
             </button>
           </div>
 
-          {/* Template 2: Payment Reminder */}
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 space-y-2 flex flex-col justify-between">
+          {/* Template 2 */}
+          <div className="p-3.5 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 flex flex-col justify-between space-y-3">
             <div>
-              <div className="font-bold text-xs text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span>2. Kalan Ödeme Hatırlatması</span>
-                <span className="text-[10px] text-emerald-600 font-semibold">Siparişler Bölümü</span>
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span>Bakiye Hatırlatması</span>
+                <span className="text-[10px] text-emerald-600 font-medium">Siparişler</span>
               </div>
-              <div className="mt-2 p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <div className="mt-2 p-2.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0b0f19] font-mono text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
 {`Sayın {Müşteri Adı},
 {Sipariş No} numaralı siparişinize ait bakiye durumu:
-💰 Toplam Tutar: {Toplam} ₺
-✅ Yapılan Ödeme: {Ödenen} ₺
-⏳ Kalan Bakiye: {Kalan} ₺
+Toplam Tutar: {Toplam} ₺
+Yapılan Ödeme: {Ödenen} ₺
+Kalan Bakiye: {Kalan} ₺
 Dekontunuzu iletebilirsiniz.`}
               </div>
             </div>
@@ -237,28 +190,28 @@ Dekontunuzu iletebilirsiniz.`}
               onClick={() =>
                 copyTemplate(
                   "payment",
-                  "Sayın {Müşteri Adı},\n{Sipariş No} numaralı siparişinize ait bakiye durumu:\n💰 Toplam Tutar: {Toplam} ₺\n✅ Yapılan Ödeme: {Ödenen} ₺\n⏳ Kalan Bakiye: {Kalan} ₺\nDekontunuzu iletebilirsiniz."
+                  "Sayın {Müşteri Adı},\n{Sipariş No} numaralı siparişinize ait bakiye durumu:\nToplam Tutar: {Toplam} ₺\nYapılan Ödeme: {Ödenen} ₺\nKalan Bakiye: {Kalan} ₺\nDekontunuzu iletebilirsiniz."
                 )
               }
-              className="mt-2 w-full py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 flex items-center justify-center gap-1.5"
+              className="w-full py-1.5 rounded border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 flex items-center justify-center gap-1.5 transition-colors"
             >
               {copiedKey === "payment" ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedKey === "payment" ? "Kopyalandı" : "Metni Kopyala"}</span>
             </button>
           </div>
 
-          {/* Template 3: Order Status Tracker */}
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 space-y-2 flex flex-col justify-between">
+          {/* Template 3 */}
+          <div className="p-3.5 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 flex flex-col justify-between space-y-3">
             <div>
-              <div className="font-bold text-xs text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                <span>3. Sipariş Durumu & Canlı Takip</span>
-                <span className="text-[10px] text-indigo-600 font-semibold">Sipariş Takip Linki</span>
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span>Canlı Sipariş Takip</span>
+                <span className="text-[10px] text-indigo-600 font-medium">Takip Linki</span>
               </div>
-              <div className="mt-2 p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <div className="mt-2 p-2.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0b0f19] font-mono text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
 {`Sayın {Müşteri Adı},
 {Sipariş No} numaralı siparişinizin durumu "{Durum}" olarak güncellenmiştir.
 Siparişinizi anlık takip etmek için:
-🔗 {Takip Linki}
+{Takip Linki}
 İyi günler dileriz.`}
               </div>
             </div>
@@ -267,10 +220,10 @@ Siparişinizi anlık takip etmek için:
               onClick={() =>
                 copyTemplate(
                   "status",
-                  "Sayın {Müşteri Adı},\n{Sipariş No} numaralı siparişinizin durumu \"{Durum}\" olarak güncellenmiştir.\nSiparişinizi anlık takip etmek için:\n🔗 {Takip Linki}\nİyi günler dileriz."
+                  "Sayın {Müşteri Adı},\n{Sipariş No} numaralı siparişinizin durumu \"{Durum}\" olarak güncellenmiştir.\nSiparişinizi anlık takip etmek için:\n{Takip Linki}\nİyi günler dileriz."
                 )
               }
-              className="mt-2 w-full py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 flex items-center justify-center gap-1.5"
+              className="w-full py-1.5 rounded border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 flex items-center justify-center gap-1.5 transition-colors"
             >
               {copiedKey === "status" ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedKey === "status" ? "Kopyalandı" : "Metni Kopyala"}</span>
@@ -279,81 +232,76 @@ Siparişinizi anlık takip etmek için:
         </div>
       </div>
 
-      {/* Section 3: Future SMS Gateway Settings */}
+      {/* Section 3: SMS Gateway Settings */}
       <form
         onSubmit={handleSaveSms}
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4"
+        className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3"
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600">
-              <Smartphone className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                SMS Servisi Entegrasyonu (Gelecek Özellik)
-              </h3>
-              <p className="text-[11px] text-slate-400">
-                Şu anda WhatsApp doğrudan kullanılmaktadır. İleride bağlanacak SMS altyapısı için sağlayıcı bilgilerinizi tanımlayabilirsiniz.
-              </p>
-            </div>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+              SMS Servisi Entegrasyonu
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              İsteğe bağlı SMS sağlayıcı ayarları (Şu an aktif kanal: WhatsApp)
+            </p>
           </div>
-          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
-            Hazır Altyapı
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            Opsiyonel
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              SMS Sağlayıcısı
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Sağlayıcı
             </label>
             <select
               value={smsProvider}
               onChange={(e) => setSmsProvider(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             >
-              <option value="netgsm">Netgsm SMS</option>
+              <option value="netgsm">Netgsm</option>
               <option value="iletimerkezi">İletiMerkezi</option>
               <option value="mutlucell">Mutlucell</option>
-              <option value="twilio">Twilio Global</option>
+              <option value="twilio">Twilio</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Gönderici Başlığı (Alfanumerik)
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Başlık (Header)
             </label>
             <input
               type="text"
               value={smsHeader}
               onChange={(e) => setSmsHeader(e.target.value)}
               placeholder="Örn: MOBILYA"
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              API Anahtarı / Şifresi
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              API Anahtarı
             </label>
             <input
               type="password"
               value={smsApiKey}
               onChange={(e) => setSmsApiKey(e.target.value)}
               placeholder="••••••••••••••••"
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-end pt-1">
           <button
             type="submit"
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
           >
             <Save className="w-3.5 h-3.5" />
-            SMS Ayarlarını Kaydet
+            <span>SMS Ayarlarını Kaydet</span>
           </button>
         </div>
       </form>
@@ -361,79 +309,74 @@ Siparişinizi anlık takip etmek için:
       {/* Section 4: Company Profile */}
       <form
         onSubmit={handleSaveCompany}
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4"
+        className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 space-y-3"
       >
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-            <Building2 className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              Firma & Belge Bilgileri
-            </h3>
-            <p className="text-[11px] text-slate-400">
-              PDF belgelerinde, teklif çıktılarında ve bildirimlerde görünecek kurumsal bilgiler
-            </p>
-          </div>
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            Kurumsal Firma Bilgileri
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            PDF çıktılarında ve bildirim başlıklarında görüntülenecek resmi bilgiler
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
               Firma Ünvanı
             </label>
             <input
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Firma Telefonu (WhatsApp Hattı)
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Firma Telefonu (WhatsApp)
             </label>
             <input
               type="text"
               value={companyPhone}
               onChange={(e) => setCompanyPhone(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              E-posta Adresi
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              E-posta
             </label>
             <input
               type="email"
               value={companyEmail}
               onChange={(e) => setCompanyEmail(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Firma Adresi
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Adres
             </label>
             <input
               type="text"
               value={companyAddress}
               onChange={(e) => setCompanyAddress(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-end pt-1">
           <button
             type="submit"
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
           >
             <Save className="w-3.5 h-3.5" />
-            Firma Bilgilerini Kaydet
+            <span>Firma Bilgilerini Kaydet</span>
           </button>
         </div>
       </form>

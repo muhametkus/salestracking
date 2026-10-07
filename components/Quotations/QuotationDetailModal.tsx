@@ -424,7 +424,7 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
               <p className="text-[11px] text-slate-600 dark:text-slate-400">
                 Bu bağlantıyı müşterinizle paylaşabilirsiniz. Müşteri linke tıkladığında teklifi inceleyip doğrudan onaylayabilir.
               </p>
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
                 <input
                   type="text"
                   readOnly
@@ -510,22 +510,20 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              {/* If PDF is empty or needs regenerate, trigger microservice */}
-              {(!detail.quotationPdfUrl || !detail.quotationPdfUrl.trim()) && (
-                <button
-                  type="button"
-                  onClick={handleGeneratePdf}
-                  disabled={generatingPdf}
-                  className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
-                >
-                  {generatingPdf ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <FileCode className="w-3.5 h-3.5" />
-                  )}
-                  <span>PDF Oluştur</span>
-                </button>
-              )}
+              {/* PDF oluştur / Yeniden PDF oluştur */}
+              <button
+                type="button"
+                onClick={handleGeneratePdf}
+                disabled={generatingPdf}
+                className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all disabled:opacity-50"
+              >
+                {generatingPdf ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <FileCode className="w-3.5 h-3.5" />
+                )}
+                <span>{detail.quotationPdfUrl ? "Yeniden PDF Oluştur" : "PDF Oluştur"}</span>
+              </button>
 
               {!isEditingPdf && (
                 <button
@@ -554,8 +552,8 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
               Teklif Kalemleri ({detail.items.length})
             </h4>
-            <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
-              <table className="w-full text-left text-xs">
+            <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-x-auto bg-white dark:bg-slate-900">
+              <table className="w-full text-left text-xs min-w-[540px]">
                 <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
                   <tr>
                     <th className="p-3">Ürün</th>
@@ -704,7 +702,7 @@ export const QuotationDetailModal: React.FC<QuotationDetailModalProps> = ({
                 )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {/* Link Share button (if in approval waiting) */}
               {detail.status === QuotationStatus.WaitingForApproval && (
                 <>
