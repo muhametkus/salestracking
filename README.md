@@ -7,10 +7,10 @@ Production service URLs are configured in `.env.production`:
 ```dotenv
 NEXT_PUBLIC_API_URL=https://apisatistakip.hebilogluahsap.com
 API_URL=https://apisatistakip.hebilogluahsap.com
-PDF_SERVICE_URL=https://teklifpdfgenerator.hebilogluahsap.com/api/documents
 ```
 
-The API base URL excludes `/swagger`. The PDF URL includes the document generation endpoint.
+The API base URL excludes `/swagger`.
+PDF generation always posts to `https://teklifpdfgenerator.hebilogluahsap.com/api/documents`, hardcoded in `app/api/pdf/generate/route.ts`. Environment variables cannot override this address, and redirects are rejected.
 Deployment environment variables and `.env.local` override `.env.production`.
 Rebuild after changing `NEXT_PUBLIC_API_URL`, since Next.js embeds it in the browser bundle.
 Keep secrets out of the tracked `.env.production` file.

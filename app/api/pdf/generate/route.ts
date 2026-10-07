@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const pdfServiceUrl = process.env.PDF_SERVICE_URL || "http://localhost:3000/api/documents";
+    const pdfServiceUrl = "https://teklifpdfgenerator.hebilogluahsap.com/api/documents";
 
     const rawData = body.data || body;
     const sanitizedData = {
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
     // Forward the quotation data to PDF generator microservice
     const response = await fetch(pdfServiceUrl, {
       method: "POST",
+      redirect: "error",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
